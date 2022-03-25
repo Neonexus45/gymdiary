@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "770505467886",
+    "firebase_url": "https://gymdiary-9aa40-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "gymdiary-9aa40",
+    "storage_bucket": "gymdiary-9aa40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770505467886:android:015c09af433d1da37e90ff",
+        "android_client_info": {
+          "package_name": "com.example.gymdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770505467886-3e507bgocplv93f7qjk62m95q2auohr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBPPhjQiF0kBpAnwHoa2v8azifO_ytrr8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770505467886-3e507bgocplv93f7qjk62m95q2auohr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

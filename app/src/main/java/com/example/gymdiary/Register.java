@@ -1,128 +1,133 @@
 package com.example.gymdiary;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.vishnusivadas.advanced_httpurlconnection.PutData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.*;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
-public class Register extends AppCompatActivity {
+public class Register extends AppCompatActivity{
+
+    private FirebaseAuth mAuth;
+    private TextView username,password,email;
+    private ProgressBar progressBar;
+    private MaterialButton regbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        //BYPASS POUR LA CLE SLL A RETIRER SI DEPLOYEMENT (ILLEGAL LOL)
-        try {
-            TrustManager[] victimizedManager = new TrustManager[]{
-
-                    new X509TrustManager() {
-
-                        public X509Certificate[] getAcceptedIssuers() {
-
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-
-                            return myTrustedAnchors;
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, victimizedManager, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
 
-        TextView username = (TextView) findViewById(R.id.username);
-        TextView password = (TextView) findViewById(R.id.password);
-        TextView email = (TextView) findViewById(R.id.email);
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
-
-        MaterialButton regbtn = (MaterialButton) findViewById(R.id.regbtnrredirect);
-
-        //gestion inscription a l'application
-        regbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mAuth = FirebaseAuth.getInstance();
 
 
 
-                //gestion de la connexion
-                if(!username.getText().toString().equals("") && !password.getText().toString().equals("") && !email.getText().toString().equals(""))
 
-                {
-                    progressBar.setVisibility(View.VISIBLE);
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            String[] field = new String[3];
-                            field[0] = "username";
-                            field[1] = "password";
-                            field[2] = "email";
-                            String[] data = new String[3];
-                            data[0] = username.getText().toString();
-                            data[1] = password.getText().toString();
-                            data[2] = email.getText().toString();
-                            PutData putData = new PutData("https://192.168.1.31/gymdiary/signup.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    progressBar.setVisibility(View.GONE);
-                                    String result = putData.getResult();
-                                    if(result.equals("Sign Up Success")){
-                                        Intent intent = new Intent(getApplicationContext(),Login.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else{
-                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        }
-                    });
+         username =  findViewById(R.id.username);
+         password =  findViewById(R.id.password);
+         email =  findViewById(R.id.email);
+         progressBar =  findViewById(R.id.progress);
+         regbtn =  findViewById(R.id.regbtnrredirect);
 
-                }
 
-                else{
-                    Toast.makeText(getApplicationContext(),"Veuillez remplir tout les champs",Toast.LENGTH_SHORT).show();
-                }
 
-            }
+         regbtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 if(username.getText().toString().trim().isEmpty()){
+                     username.setError("pseudo requis !");
+                     username.requestFocus();
+                     return;
+                 }
 
-        });
+                 if(password.getText().toString().trim().isEmpty()){
+                     password.setError("mdp requis !");
+                     password.requestFocus();
+                     return;
+                 }
+
+                 if(email.getText().toString().trim().isEmpty()){
+                     email.setError("email requis !");
+                     email.requestFocus();
+                     return;
+                 }
+                 if(Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()){
+                     email.setError("veuillez entrer un mail valide");
+                     email.requestFocus();
+                     return;
+                 }
+                 if(password.getText().toString().trim().length() < 6 ){
+                     password.setError("longueur Minimum de 6 chars svp...");
+                     password.requestFocus();
+                     return;
+                 }
+
+                 progressBar.setVisibility(View.VISIBLE);
+                 mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim())
+                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                             @Override
+                             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+
+                                 if(task.isSuccessful()){
+                                     User user = new User(username.getText().toString().trim(),email.getText().toString().trim());
+
+                                     FirebaseDatabase.getInstance("https://gymdiary-9aa40-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
+                                             .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                             .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                 @Override
+                                                 public void onComplete(@NonNull @NotNull Task<Void> task) {
+
+
+                                                     if(task.isSuccessful()){
+
+                                                         Toast.makeText(Register.this,"Utilisateur a été inscrit avec succés",Toast.LENGTH_LONG).show();
+                                                         progressBar.setVisibility(View.GONE);
+                                                         startActivity(new Intent(getApplicationContext(),Login.class));
+                                                         finish();
+                                                     }else {
+                                                         Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
+                                                         progressBar.setVisibility(View.GONE);
+                                                     }
+                                                 }
+                                             });
+                                 }else{
+                                     Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
+                                     progressBar.setVisibility(View.GONE);
+                                 }
+                             }
+                         });
+
+             }
+         });
 
 
 
     }
 }
+
+
+

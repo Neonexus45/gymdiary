@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    android:layout_marginHorizontal="110dp"
+    android:layout_marginVertical="8dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+
+        <Spinner
+            android:id="@+id/machinetxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/machinetxt"
+
+            android:text="TYPE MACHINE"
+
+            />
+
+        <TextView
+            android:id="@+id/repstxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/machinetxt"
+            android:text="reps :        "
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/machinetxt"
+            android:layout_alignEnd="@id/repstxt"
+            android:layout_marginTop="-10dp"
+
+            android:text="" />
+
+        <TextView
+            android:id="@+id/sérietxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reps"
+            android:text="séries :       "
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/série"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reps"
+            android:layout_alignEnd="@id/sérietxt"
+            android:layout_marginTop="-10dp"
+            android:text=""
+
+            />
+
+        <TextView
+            android:id="@+id/poidtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/série"
+            android:text="poid :       "
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/poid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/série"
+            android:layout_alignEnd="@id/poidtxt"
+            android:layout_marginTop="-10dp"
+            android:text="" />
+
+    </RelativeLayout>
+
+
+
+
+
+</androidx.cardview.widget.CardView>

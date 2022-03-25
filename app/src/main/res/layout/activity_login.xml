@@ -10,7 +10,7 @@
         tools:context=".Login">
 
     <TextView
-        android:id="@+id/sigin"
+        android:id="@+id/signin"
         style="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,32 +18,35 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
+        android:fontFamily="serif"
         android:gravity="center"
         android:text="GymDiary"
         android:textColor="@color/white"
         android:textSize="35dp" />
 
     <EditText
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/username"
+        android:layout_below="@id/signin"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:background="#30ffffff"
-        android:layout_below="@id/sigin"
-        android:hint="pseudonyme"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:layout_margin="10dp"
-        android:padding="20dp"
         android:drawableLeft="@drawable/ic_baseline_person_outline_24"
         android:drawablePadding="20dp"
 
-        />
+        android:hint="e-mail"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username"
+        android:layout_below="@id/email"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -51,8 +54,9 @@
         android:background="#30ffffff"
         android:drawableLeft="@drawable/ic_baseline_lock_24"
         android:drawablePadding="20dp"
-
         android:hint="mot de passe"
+
+        android:inputType="textPassword"
         android:padding="20dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white" />
@@ -68,7 +72,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/purple_500"
+        android:backgroundTint="@color/teal_200"
         android:text="SE CONNECTER" />
 
     <com.google.android.material.button.MaterialButton
@@ -78,7 +82,7 @@
         android:layout_below="@id/loginbtn"
         android:layout_centerHorizontal="true"
 
-        android:backgroundTint="@color/purple_500"
+        android:backgroundTint="@color/teal_200"
         android:text="S'inscrire" />
 
     <TextView
