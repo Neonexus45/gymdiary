@@ -1,5 +1,6 @@
-package com.example.gymdiary.Adapter;
+package com.example.gymdiary.Utils;
 
+        import android.content.Context;
         import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,13 @@ import com.example.gymdiary.Workout;
 import com.example.gymdiary.Workout_summary;
         import org.jetbrains.annotations.NotNull;
 
-        import java.util.Arrays;
         import java.util.List;
 
         public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder> {
 
-                private List<Workout> workoutList;
+            private List<Workout> workoutList;
                 private Workout_summary workout_summary;
+
 
                 public WorkoutAdapter(Workout_summary workout_summary){
                 this.workout_summary = workout_summary;
@@ -48,6 +49,15 @@ import com.example.gymdiary.Workout_summary;
             public void setWorkout(List<Workout> workoutList){
                     this.workoutList = workoutList;
                     notifyDataSetChanged();
+
+
+            }
+            public Context getContext(){return this.workout_summary;}
+
+            public void deleteitem(int position){
+                    Workout item = workoutList.get(position);
+                    workoutList.remove(position);
+                    notifyItemRemoved(position);
 
             }
 

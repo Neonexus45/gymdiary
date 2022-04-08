@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.net.ssl.*;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -55,73 +56,70 @@ public class Register extends AppCompatActivity{
 
 
 
-         regbtn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 if(username.getText().toString().trim().isEmpty()){
-                     username.setError("pseudo requis !");
-                     username.requestFocus();
-                     return;
-                 }
-
-                 if(password.getText().toString().trim().isEmpty()){
-                     password.setError("mdp requis !");
-                     password.requestFocus();
-                     return;
-                 }
-
-                 if(email.getText().toString().trim().isEmpty()){
-                     email.setError("email requis !");
-                     email.requestFocus();
-                     return;
-                 }
-                 if(Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()){
-                     email.setError("veuillez entrer un mail valide");
-                     email.requestFocus();
-                     return;
-                 }
-                 if(password.getText().toString().trim().length() < 6 ){
-                     password.setError("longueur Minimum de 6 chars svp...");
-                     password.requestFocus();
-                     return;
-                 }
-
-                 progressBar.setVisibility(View.VISIBLE);
-                 mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim())
-                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                             @Override
-                             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-
-                                 if(task.isSuccessful()){
-                                     User user = new User(username.getText().toString().trim(),email.getText().toString().trim());
-
-                                     FirebaseDatabase.getInstance("https://gymdiary-9aa40-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
-                                             .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                             .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                 @Override
-                                                 public void onComplete(@NonNull @NotNull Task<Void> task) {
-
-
-                                                     if(task.isSuccessful()){
-
-                                                         Toast.makeText(Register.this,"Utilisateur a été inscrit avec succés",Toast.LENGTH_LONG).show();
-                                                         progressBar.setVisibility(View.GONE);
-                                                         startActivity(new Intent(getApplicationContext(),Login.class));
-                                                         finish();
-                                                     }else {
-                                                         Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
-                                                         progressBar.setVisibility(View.GONE);
-                                                     }
-                                                 }
-                                             });
-                                 }else{
-                                     Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
-                                     progressBar.setVisibility(View.GONE);
-                                 }
-                             }
-                         });
-
+         regbtn.setOnClickListener(view -> {
+             if(username.getText().toString().trim().isEmpty()){
+                 username.setError("pseudo requis !");
+                 username.requestFocus();
+                 return;
              }
+
+             if(password.getText().toString().trim().isEmpty()){
+                 password.setError("mdp requis !");
+                 password.requestFocus();
+                 return;
+             }
+
+             if(email.getText().toString().trim().isEmpty()){
+                 email.setError("email requis !");
+                 email.requestFocus();
+                 return;
+             }
+             if(Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()){
+                 email.setError("veuillez entrer un mail valide");
+                 email.requestFocus();
+                 return;
+             }
+             if(password.getText().toString().trim().length() < 6 ){
+                 password.setError("longueur Minimum de 6 chars svp...");
+                 password.requestFocus();
+                 return;
+             }
+
+             progressBar.setVisibility(View.VISIBLE);
+             mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim())
+                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                         @Override
+                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+
+                             if(task.isSuccessful()){
+                                 User user = new User(username.getText().toString().trim(),email.getText().toString().trim(),new ArrayList<>());
+
+                                 FirebaseDatabase.getInstance("https://gymdiary-9aa40-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
+                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                             @Override
+                                             public void onComplete(@NonNull @NotNull Task<Void> task) {
+
+
+                                                 if(task.isSuccessful()){
+
+                                                     Toast.makeText(Register.this,"Utilisateur a été inscrit avec succés",Toast.LENGTH_LONG).show();
+                                                     progressBar.setVisibility(View.GONE);
+                                                     startActivity(new Intent(getApplicationContext(),Login.class));
+                                                     finish();
+                                                 }else {
+                                                     Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
+                                                     progressBar.setVisibility(View.GONE);
+                                                 }
+                                             }
+                                         });
+                             }else{
+                                 Toast.makeText(Register.this,"Erreur dans l'inscription, veuillez réesayer",Toast.LENGTH_LONG).show();
+                                 progressBar.setVisibility(View.GONE);
+                             }
+                         }
+                     });
+
          });
 
 

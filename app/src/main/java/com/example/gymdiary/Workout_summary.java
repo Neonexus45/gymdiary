@@ -1,56 +1,70 @@
 package com.example.gymdiary;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.gymdiary.Adapter.WorkoutAdapter;
+import com.example.gymdiary.Utils.RecyclerItemTouchHelper;
+import com.example.gymdiary.Utils.WorkoutAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Workout_summary extends AppCompatActivity {
+public class Workout_summary extends AppCompatActivity implements WorkoutPopup.WorkoutPopupListener {
 
     private RecyclerView tasksRecyclerView;
     private WorkoutAdapter adapter;
+    private FloatingActionButton fab;
+    private TextView jour;
 
     private List<Workout> workoutList;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
+        Intent intent = getIntent();
+        jour = findViewById(R.id.description);
+        jour.setText("Le " + intent.getStringExtra("day" )+ "/" + intent.getStringExtra("month") + "/" + intent.getStringExtra("year"));
+
+
+
 
         workoutList = new ArrayList<>();
+        workoutList.add(new Workout(0,0,0,""));
+
+
         tasksRecyclerView = findViewById(R.id.recycleview);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new WorkoutAdapter(this);
         tasksRecyclerView.setAdapter(adapter);
 
-        Workout workout1 = new Workout(1,1,1,"Choisir");
-        Workout workout2 = new Workout(2,2,2,"Choisir");
-        Workout workout3 = new Workout(3,3,3,"Choisir");
-        Workout workout4 = new Workout(4,4,4,"Choisir");
-        Workout workout5 = new Workout(5,5,5,"Choisir");
-        Workout workout6 = new Workout(6,6,6,"Choisir");
+        fab = findViewById(R.id.fab);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(adapter));
+        itemTouchHelper.attachToRecyclerView(tasksRecyclerView);
 
-        workoutList.add(workout1);
-        workoutList.add(workout2);
-        workoutList.add(workout3);
-        workoutList.add(workout4);
-        workoutList.add(workout5);
-        workoutList.add(workout6);
+        fab.setOnClickListener(view -> createNeWorkout());
+            adapter.setWorkout(workoutList);
 
+    }
 
-        adapter.setWorkout(workoutList);
+    private void createNeWorkout() {
+        WorkoutPopup popup = new WorkoutPopup();
+        popup.show(getSupportFragmentManager(),"test dialog");
 
+    }
 
-
-
-
+    @Override
+    public void applyTexts(int r1, int r2, int r3) {
+        workoutList.add(new Workout(r1,r2,r3,""));
     }
 }
