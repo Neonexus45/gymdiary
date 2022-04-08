@@ -24,7 +24,12 @@ public class MainActivity extends AppCompatActivity {
         calendrier.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                startActivity(new Intent(MainActivity.this,Workout_summary.class));
+                Intent intent = new Intent(MainActivity.this,Workout_summary.class);
+                intent.putExtra("year",String.valueOf(i));
+                intent.putExtra("month",String.valueOf(i1));
+                intent.putExtra("day",String.valueOf(i2));
+
+                startActivity(intent);
 
             }
         });
