@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymdiary.Utils.RecyclerItemTouchHelper;
 import com.example.gymdiary.Utils.WorkoutAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class Workout_summary extends AppCompatActivity implements WorkoutPopup.W
     private WorkoutAdapter adapter;
     private FloatingActionButton fab;
     private TextView jour;
+    private DatabaseReference dbref;
 
     private List<Workout> workoutList;
 
@@ -33,7 +36,10 @@ public class Workout_summary extends AppCompatActivity implements WorkoutPopup.W
 
         Intent intent = getIntent();
         jour = findViewById(R.id.description);
-        jour.setText("Le " + intent.getStringExtra("day" )+ "/" + intent.getStringExtra("month") + "/" + intent.getStringExtra("year"));
+        String jourstr = "Le " + intent.getStringExtra("day" )+ "/" + intent.getStringExtra("month") + "/" + intent.getStringExtra("year");
+        jour.setText(jourstr);
+        dbref = FirebaseDatabase.getInstance().getReference().child("workoutouts");
+
 
 
 
@@ -65,6 +71,8 @@ public class Workout_summary extends AppCompatActivity implements WorkoutPopup.W
 
     @Override
     public void applyTexts(int r1, int r2, int r3) {
+
         workoutList.add(new Workout(r1,r2,r3,""));
+        dbref.push().setValue(new Workout(r1,r2,r3,""));
     }
 }
